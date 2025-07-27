@@ -51,29 +51,14 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 h-screen">
+<body class="bg-gray-100 text-gray-800 h-screen flex flex-col">
 
-    <div id="demo-banner" class="text-center text-sm font-semibold p-1">
-        This is a demo by Sky Island AI. All data is for illustrative purposes only. Emails are just examples and will not be sent.
-    </div>
-
-    <div id="app" class="flex flex-col h-full p-4">
-        <!-- Header -->
-        <header class="bg-white rounded-xl shadow-sm p-4 mb-4 flex-shrink-0">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Constituent Correspondence</h1>
-                    <p class="text-gray-500">Ward 2 Office - Councilmember Paul Cunningham</p>
-                </div>
-                 <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-            </div>
-        </header>
-
+    <div id="app" class="flex-grow flex flex-col p-4 overflow-hidden">
         <!-- Main Content: 3-Pane Layout -->
         <main class="flex-grow grid grid-cols-12 gap-4 overflow-hidden">
             
             <!-- Pane 1: Inbox Summary -->
-            <div class="col-span-12 lg:col-span-3 bg-white rounded-xl shadow-sm flex flex-col">
+            <div class="col-span-12 lg:col-span-3 bg-white rounded-xl shadow-sm flex flex-col overflow-hidden">
                 <div class="p-4 border-b border-gray-200 flex-shrink-0">
                     <h3 class="text-xl font-semibold">Weekly Topic Summary</h3>
                 </div>
@@ -83,7 +68,7 @@
             </div>
 
             <!-- Pane 2: Inbox -->
-            <div class="col-span-12 lg:col-span-4 bg-white rounded-xl shadow-sm flex flex-col">
+            <div class="col-span-12 lg:col-span-4 bg-white rounded-xl shadow-sm flex flex-col overflow-hidden">
                 <div class="p-4 border-b border-gray-200 flex-shrink-0">
                     <h3 id="inbox-header" class="text-xl font-semibold">New Email Inbox</h3>
                 </div>
@@ -99,16 +84,16 @@
                 </div>
             </div>
         </main>
-        
-        <footer class="text-center text-xs text-gray-500 pt-3 flex-shrink-0">
-            Designed by Sky Island AI in Tucson
-        </footer>
     </div>
     
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-10 right-5 bg-gray-900 text-white py-2 px-4 rounded-lg shadow-lg text-sm opacity-0 transition-opacity duration-300">
         Message goes here
     </div>
+
+    <footer id="demo-banner" class="bg-yellow-300 text-yellow-800 text-center text-sm font-semibold p-2 flex-shrink-0">
+        This is a demo by Sky Island AI. All data is for illustrative purposes only. Emails are just examples and will not be sent.
+    </footer>
 
 <script>
 // --- DATA ---
@@ -119,8 +104,11 @@ const topics = {
         con: 184,
         displayType: 'pro-con',
         sentimentSummary: "Constituents are overwhelmingly concerned about the project's water usage in the desert.",
-        stance: "Councilmember Cunningham is very skeptical about any enterprise that uses large amounts of water in our city. He has cited the lack of transparency with this project and stated that Tucsonans deserve an open and honest conversation about how our water and energy resources are being used. He has noted that residents have worked hard for 40 years to conserve water and would need a lot more specific information to even consider this request.",
-        replyOpening: "Thank you for contacting the Ward 2 office. We understand your concerns about water usage regarding Project Blue."
+        // Stances tailored to sentiment
+        conReplyOpening: "Thank you for contacting the Ward 2 office. We understand your concerns about water usage regarding Project Blue.",
+        conStance: "Councilmember Cunningham shares your skepticism. He is very concerned about any enterprise that uses large amounts of water in our city and has cited the lack of transparency with this project. He believes Tucsonans deserve an open and honest conversation about how our water and energy resources are being used and has noted that residents have worked hard for 40 years to conserve water. As he has stated publicly, he would need a lot more specific information to even consider this request.",
+        proReplyOpening: "Thank you for sharing your perspective on Project Blue and the need for local tech jobs.",
+        proStance: "Councilmember Cunningham understands the importance of economic development and creating opportunities that keep talented people in Tucson. He is watching this proposal very closely, weighing the potential benefits against his significant concerns about water use and the project's lack of transparency. As he has stated publicly, he believes any such project requires an open and honest conversation about how we use our resources and would need much more specific information before making a decision.",
     },
     'homelessness': {
         name: 'Homelessness',
@@ -128,17 +116,21 @@ const topics = {
         con: 68, // Con-enforcement
         displayType: 'count-only',
         sentimentSummary: "Residents are frustrated with encampments but divided on the solution; many want services, others want stricter enforcement.",
-        stance: "Councilmember Cunningham believes law enforcement has a role to play, but that this is not a problem we can arrest our way out of. He advocates for a broader set of solutions that include providing treatment and services, especially in-custody drug treatment. He frequently visits encampments and emphasizes that while many refuse services due to addiction clouding their judgment, it's crucial to have treatment beds available for moments of clarity.",
-        replyOpening: "Thank you for reaching out. We understand the frustration and share your concerns regarding the complex issue of homelessness in our community."
+        conReplyOpening: "Thank you for reaching out. We understand the frustration and share your concerns regarding the complex issue of homelessness and safety in our neighborhoods.",
+        conStance: "Councilmember Cunningham believes law enforcement absolutely has a role to play in addressing safety and health hazards. He also believes this is not a problem we can arrest our way out of and advocates for a broader set of solutions that include providing treatment and services. He frequently visits encampments and emphasizes that while many refuse services due to addiction clouding their judgment, it's crucial to have treatment beds available for moments of clarity to create lasting change.",
+        proReplyOpening: "Thank you for contacting our office and for your support of compassionate solutions to homelessness.",
+        proStance: "Councilmember Cunningham agrees that service-based approaches are essential. He is a strong supporter of innovative programs like The Homing Project and advocates for more resources for in-custody drug treatment. He believes that while law enforcement has a role, we cannot arrest our way out of this problem. Providing dignity, security, and services is key to making a real difference for those on the streets and for our community as a whole.",
     },
-    'tep-franchise': {
-        name: 'TEP Franchise',
-        pro: 18, // Pro-TEP
-        con: 241,  // Con-TEP
+    'tep-franchise-agreement': {
+        name: 'TEP Franchise Agreement',
+        pro: 8, // Pro-TEP
+        con: 125,  // Con-TEP
         displayType: 'pro-con',
         sentimentSummary: "The public is largely frustrated with TEP and supportive of exploring alternatives like a public utility.",
-        stance: "Councilmember Cunningham has expressed his frustration with TEP, feeling they have not been a good community partner. He voted not to put the last franchise agreement on the ballot, citing TEP's lack of feedback and simultaneous request for a rate increase. He has seriously explored the feasibility of the city financing the purchase of TEP to create a public utility.",
-        replyOpening: "Thank you for sharing your perspective on the TEP franchise agreement."
+        conReplyOpening: "Thank you for sharing your perspective on the TEP Franchise Agreement.",
+        conStance: "Councilmember Cunningham shares your frustration and has expressed that it doesn’t always feel like we have a good community partner in TEP. He voted not to put the last franchise agreement on the ballot, citing TEP's lack of feedback and simultaneous request for a rate increase. He has seriously explored the feasibility of the city financing the purchase of TEP to create a public utility as a potential alternative.",
+        proReplyOpening: "Thank you for sharing your thoughts on the TEP Franchise Agreement.",
+        proStance: "Councilmember Cunningham understands that TEP provides a critical service to our city. However, he has expressed frustration with TEP, feeling they have not always been a good community partner in franchise discussions. His goal is to ensure any future agreement serves the best interests of Tucsonans, with strong concessions for conservation and reliability. He is weighing all options to ensure our city's energy future is secure and affordable.",
     },
     'accessibility': {
         name: 'Disability & Accessibility',
@@ -146,20 +138,21 @@ const topics = {
         con: 2,
         displayType: 'count-only',
         sentimentSummary: "Constituents are supportive of measures to protect and enhance accessibility for people with disabilities.",
-        stance: "This is an issue of great importance to Councilmember Cunningham. He is tracking the rollback of federal accessibility protections very closely and has pledged to take all necessary steps to ensure the City of Tucson’s websites, apps, facilities, and services are accessible for everyone. He notes that this affects us all, as most people will experience a disability at some point in their lives if they live long enough.",
-        replyOpening: "Thank you for contacting our office about the critical issue of digital accessibility."
+        // Generic stance as the core issue is the same
+        replyOpening: "Thank you for contacting our office about the critical issue of accessibility.",
+        stance: "This is an issue of great importance to Councilmember Cunningham. He is tracking the rollback of federal accessibility protections very closely and has pledged to take all necessary steps to ensure the City of Tucson’s websites, apps, facilities, and services are accessible for everyone. He notes that this affects us all, as most people will experience a disability at some point in their lives if they live long enough. Your feedback on specific issues is invaluable in this effort.",
     }
 };
 
 const emails = [
     { id: 1, sender: 'Brenda Vance', email: 'b.vance@example.com', subject: 'My strong opposition to Project Blue', body: "Dear Councilmember Cunningham's office,\n\nI am writing to you today as a deeply concerned citizen and a long-time resident of Ward 2. The recent news about 'Project Blue' and the proposal for a massive data center has me extremely worried. We live in the Sonoran Desert, a place of incredible beauty but also of extreme water scarcity. The idea that we would even entertain a project that consumes millions of gallons of water per day is, frankly, shocking to me.\n\nI've been diligent about water conservation for my entire adult life, as have most of my neighbors. We've replaced our lawns with native plants, we take shorter showers, we've done everything asked of us. To see that effort potentially wiped out by a single, massive industrial user feels like a slap in the face. What about our future? What about the aquifer that our children and grandchildren will depend on?\n\nI urge the Councilmember to stand firm against this. It's not just about this one project; it's about the precedent it sets. If we approve this, who's next? We need to protect our most precious resource, not sell it off to the highest bidder. Please, vote NO on Project Blue.\n\nThank you for your time.", topic: 'project-blue', sentiment: 'Con', summary: 'Constituent strongly opposes Project Blue, arguing its high water consumption is irresponsible in a desert environment and undermines years of citizen conservation efforts.', status: 'new' },
     { id: 2, sender: 'Greg Peterson', email: 'greg.p@example.com', subject: 'My thoughts on the situation in the washes', body: "To whom it may concern,\n\nI've lived in Ward 2 for over 30 years, and I have to say I'm getting more and more concerned about the state of things. The wash behind my house, which used to be a place my kids would play, is now filled with tents and trash. I'm sympathetic, I really am, I know people are down on their luck. I read the Councilmember's newsletters and I know he supports things like The Homing Project, which sounds great in theory. But what about right now? I've called the police a few times, and they're always respectful, but they say their hands are tied. It just feels like a revolving door. Is there a plan?\n\nI don't want to just criminalize being poor, but I also want to feel safe, and I want my property value to not plummet. It's not just about enforcement, but it's not just about services either, it has to be both. I just feel like nothing is actually changing. I'm not even sure what I'm asking for, just that I'm frustrated and hoping there's a real, long-term strategy being discussed beyond what I read in the weekly email. The trash is piling up, and last week there was a fire that the fire department had to come put out. It's becoming a serious hazard. We need a solution that respects people but also respects the neighborhoods they are in.", topic: 'homelessness', sentiment: 'Con', summary: 'Long-time resident expresses frustration with a homeless encampment, feeling conflicted between the need for safety/enforcement and compassionate services.', status: 'new' },
-    { id: 3, sender: 'Maria Flores', email: 'm.flores@example.com', subject: 'Re: Your newsletter on TEP - thank you!', body: "Hello Ward 2 Staff,\n\nI just wanted to send a quick but heartfelt note of thanks after reading Councilmember Cunningham's latest newsletter about the TEP franchise. It was so refreshing to hear an elected official speak so candidly about the frustrations many of us feel. For years, it has felt like TEP holds all the cards, raising rates while service feels stagnant. My bill has gone up nearly 30% in the last two years alone.\n\nThe idea of a public utility is something my friends and I have talked about for a long time, but we always assumed it was a pipe dream. Hearing that the Councilmember has actually run the numbers and is seriously considering it gives me so much hope. It is high time that our power company was accountable to us, the citizens of Tucson, not to a group of shareholders in another state. Please let Mr. Cunningham know he has my full support on this issue. Keep fighting the good fight!\n\nSincerely,\nMaria Flores", topic: 'tep-franchise', sentiment: 'Con', summary: 'Constituent strongly supports Councilmember Cunningham\'s critical stance on TEP and his exploration of creating a public utility, citing her own rising electricity bills.', status: 'new' },
+    { id: 3, sender: 'Maria Flores', email: 'm.flores@example.com', subject: 'Re: Your newsletter on TEP - thank you!', body: "Hello Ward 2 Staff,\n\nI just wanted to send a quick but heartfelt note of thanks after reading Councilmember Cunningham's latest newsletter about the TEP franchise agreement. It was so refreshing to hear an elected official speak so candidly about the frustrations many of us feel. For years, it has felt like TEP holds all the cards, raising rates while service feels stagnant. My bill has gone up nearly 30% in the last two years alone.\n\nThe idea of a public utility is something my friends and I have talked about for a long time, but we always assumed it was a pipe dream. Hearing that the Councilmember has actually run the numbers and is seriously considering it gives me so much hope. It is high time that our power company was accountable to us, the citizens of Tucson, not to a group of shareholders in another state. Please let Mr. Cunningham know he has my full support on this issue. Keep fighting the good fight!\n\nSincerely,\nMaria Flores", topic: 'tep-franchise-agreement', sentiment: 'Con', summary: 'Constituent strongly supports Councilmember Cunningham\'s critical stance on TEP and his exploration of creating a public utility, citing her own rising electricity bills.', status: 'new' },
     { id: 4, sender: 'David Chen', email: 'd.chen@example.com', subject: 'A critical question about city website accessibility for the disabled', body: "Dear Ward 2 staff,\n\nI'm writing today about an issue that is of deep personal importance to my family. I was very concerned to read about the federal government rolling back some of the rules that mandate website accessibility for people with disabilities. My mother is 78 and is visually impaired; she relies on screen reader software to navigate the internet, pay her bills, and stay connected.\n\nThe city's website is a vital resource for her. It's how she finds information on bus schedules, parks programs, and pays her water bill. The idea that this access could be compromised is frightening. It's not a matter of convenience, it's a matter of independence and dignity.\n\nI saw in a past newsletter that the Councilmember has staff with disabilities and is attuned to these issues, which is why I'm writing to you. Can you please tell me what the City of Tucson is doing proactively to ensure its digital infrastructure—websites, payment portals, information dashboards—will not only remain accessible but continue to improve for people like my mother, regardless of what happens at the federal level? Thank you for your attention to this important matter.", topic: 'accessibility', sentiment: 'Pro', summary: 'Constituent, whose visually impaired mother relies on screen readers, is concerned about federal changes to accessibility rules and asks what the City is doing to protect digital access for disabled residents.', status: 'new' },
-    { id: 5, sender: 'Robert Miller', email: 'rmiller@example.com', subject: 'TEP power outages', body: "Is anyone else sick of TEP? My power has gone out three times this month for no apparent reason. It's not even monsoon season. When I call, I get a recording. It's impossible to run my home business when the electricity is this unreliable. I read that Paul is considering a public utility and I say PLEASE DO IT. We need accountability and investment in the grid, not just constant rate hikes for terrible service. I am 100% against renewing any franchise agreement with them until they can guarantee reliable service.", topic: 'tep-franchise', sentiment: 'Con', summary: 'Constituent is angry about recent power outages, unreliable service from TEP, and strongly supports the idea of a public utility over renewing the franchise agreement.', status: 'new' },
+    { id: 5, sender: 'Robert Miller', email: 'rmiller@example.com', subject: 'TEP power outages', body: "Is anyone else sick of TEP? My power has gone out three times this month for no apparent reason. It's not even monsoon season. When I call, I get a recording. It's impossible to run my home business when the electricity is this unreliable. I read that Paul is considering a public utility and I say PLEASE DO IT. We need accountability and investment in the grid, not just constant rate hikes for terrible service. I am 100% against renewing any franchise agreement with them until they can guarantee reliable service.", topic: 'tep-franchise-agreement', sentiment: 'Con', summary: 'Constituent is angry about recent power outages, unreliable service from TEP, and strongly supports the idea of a public utility over renewing the franchise agreement.', status: 'new' },
     { id: 6, sender: 'Samantha Jones', email: 's.jones@example.com', subject: 'Homelessness and our parks', body: "Hello, I'm a mother of two young children and we love going to the park. Lately, however, the growing number of people living in the park has made us feel unsafe. Last week there was a man yelling at no one and it scared my daughter. I understand this is a complex problem, but our public spaces need to be safe for families. I support the Councilmember's focus on treatment, but we also need more presence from park rangers or police to ensure the rules are being followed and that our kids can play without fear. What is being done to ensure the safety of families in our city parks?", topic: 'homelessness', sentiment: 'Con', summary: 'A mother expresses safety concerns about homeless individuals in public parks and requests a greater presence from authorities to ensure the spaces are safe for children.', status: 'new' },
     { id: 7, sender: 'Ken Tanaka', email: 'ktanaka@example.com', subject: 'Project Blue = Jobs?', body: "I'm writing in support of Project Blue. I know people are worried about water, and that's valid, but we also need good-paying tech jobs in this city. My son just graduated from the U of A with a computer science degree and he's thinking of moving to Phoenix or Austin. Projects like this are what will keep our talented young people here in Tucson. I trust that the city can negotiate a deal that requires the company to use water responsibly, perhaps with water recycling technology. Let's not turn away a major economic opportunity out of fear. We can have both jobs and responsible water management.", topic: 'project-blue', sentiment: 'Pro', summary: 'Constituent supports Project Blue, arguing that the high-tech jobs it would create are essential for retaining local talent, and trusts the city to enforce responsible water use.', status: 'new' },
-    { id: 8, sender: 'Linda Washington', email: 'l.washington@example.com', subject: 'My TEP bill is outrageous', body: "I am a senior on a fixed income and my latest TEP bill was over $200. This is simply unsustainable. Every year they ask for more money and I don't see any improvement. I keep my thermostat at 78 in the summer and I'm still getting gouged. Thank you to Councilmember Cunningham for standing up to them. I am strongly against their monopoly and would love to see a public option that puts people over profits. Please continue to fight for us.", topic: 'tep-franchise', sentiment: 'Con', summary: 'A senior on a fixed income is struggling with high TEP bills and supports the councilmember\'s fight against the company in favor of a public option.', status: 'new' },
+    { id: 8, sender: 'Linda Washington', email: 'l.washington@example.com', subject: 'My TEP bill is outrageous', body: "I am a senior on a fixed income and my latest TEP bill was over $200. This is simply unsustainable. Every year they ask for more money and I don't see any improvement. I keep my thermostat at 78 in the summer and I'm still getting gouged. Thank you to Councilmember Cunningham for standing up to them. I am strongly against their monopoly and would love to see a public option that puts people over profits. Please continue to fight for us.", topic: 'tep-franchise-agreement', sentiment: 'Con', summary: 'A senior on a fixed income is struggling with high TEP bills and supports the councilmember\'s fight against the company in favor of a public option.', status: 'new' },
     { id: 9, sender: 'Susan Garcia', email: 'sgarcia@example.com', subject: 'Support for The Homing Project', body: "I read in the newsletter about The Homing Project and wanted to express my full support. This is exactly the kind of innovative, compassionate solution we need for the homelessness crisis. Instead of just pushing people from one street corner to the next, this provides dignity, security, and services. I am so glad to see the Councilmember championing this approach. Please let me know if there are volunteer opportunities or ways for the community to support this project. It's a fantastic idea.", topic: 'homelessness', sentiment: 'Pro', summary: 'Constituent read about The Homing Project in the newsletter and writes to express her strong support for it as a compassionate solution to homelessness.', status: 'new' },
     { id: 10, sender: 'Frank White', email: 'fwhite@example.com', subject: 'Water is more precious than data', body: "Let's be clear: water is finite. Data is not. The proposal to allow a massive data center to be built here is absurd. I've seen the arguments about jobs, but what good are jobs if we've drained our aquifer and are facing a water crisis in 10 years? The long-term environmental cost is not worth the short-term economic gain. Councilmember Cunningham's skepticism is well-founded, and I hope he continues to oppose this reckless project. We need to be leaders in sustainability, not give away our future.", topic: 'project-blue', sentiment: 'Con', summary: 'Constituent argues that the long-term environmental cost of Project Blue\'s water usage far outweighs any short-term economic benefits and urges continued opposition.', status: 'new' },
     { id: 11, sender: 'Emily Rodriguez', email: 'emily.r@example.com', subject: 'Accessibility at City Events', body: "Hello, I attended the recent event at the park and wanted to provide some feedback on accessibility. While I appreciate the city hosting these events, the temporary ramps were very steep and difficult to navigate in my wheelchair. Also, there was no designated accessible seating area with clear sightlines. I know the Councilmember is a champion for disability rights, so I wanted to bring this to your attention for future planning. Ensuring everyone can participate fully is so important. Thank you.", topic: 'accessibility', sentiment: 'Pro', summary: 'Constituent, a wheelchair user, provides feedback on poor accessibility (steep ramps, no designated seating) at a recent city event and asks for improvements.', status: 'new' }
@@ -189,8 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function autosizeTextarea(textarea) {
         if (!textarea) return;
-        textarea.style.height = 'auto'; 
-        textarea.style.height = textarea.scrollHeight + 'px';
+        const container = textarea.closest('#response-panel-container'); // Preserve scroll position while resizing
+        const previousScrollTop = container ? container.scrollTop : 0; // capture current scroll
+        textarea.style.height = 'auto'; // reset height to get true scrollHeight
+        textarea.style.height = (textarea.scrollHeight + 2) + 'px'; // add 2px buffer so last line is not clipped
+        if (container) {
+            container.scrollTop = previousScrollTop; // restore scroll to prevent jumping
+        }
     }
 
     function clearResponsePanel() {
@@ -303,7 +301,19 @@ document.addEventListener('DOMContentLoaded', () => {
             sentimentHtml = `<span>Sentiment: <strong class="px-2 py-1 rounded-md ${sentimentClass}">${email.sentiment}</strong></span>`;
         }
 
-        const proposedReply = `${topicInfo.replyOpening}\n\n${topicInfo.stance}\n\nYour comments have been noted and will be passed along to Councilmember Cunningham. We appreciate you taking the time to engage with our office.\n\nSincerely,\nWard 2 Staff`;
+        // --- Dynamic Reply Generation ---
+        let opening = topicInfo.replyOpening || "";
+        let stance = topicInfo.stance || "";
+
+        if (email.sentiment === 'Con' && topicInfo.conStance) {
+            opening = topicInfo.conReplyOpening;
+            stance = topicInfo.conStance;
+        } else if (email.sentiment === 'Pro' && topicInfo.proStance) {
+            opening = topicInfo.proReplyOpening;
+            stance = topicInfo.proStance;
+        }
+        
+        const proposedReply = `${opening}\n\n${stance}\n\nYour comments have been noted and will be passed along to Councilmember Cunningham. We appreciate you taking the time to engage with our office.\n\nSincerely,\nWard 2 Staff`;
 
         responsePanel.innerHTML = `
             <div class="p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
@@ -313,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="p-6 space-y-6">
                 <div>
                     <h4 class="font-semibold text-gray-600 mb-2">Original Message</h4>
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-gray-700 text-sm whitespace-pre-wrap max-h-48 overflow-y-auto">${email.body}</div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-gray-700 text-sm whitespace-pre-wrap">${email.body}</div>
                 </div>
                 <div>
                     <h4 class="font-semibold text-gray-600 mb-2">AI Analysis</h4>
