@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="mt-4">
                     <h5 class="text-sm font-medium text-gray-500 mb-1">AI Translation (English)</h5>
-                    <textarea id="reply-textarea-en" readonly class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50">${proposedReply_en}</textarea>
+                    <textarea id="reply-textarea-en" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200">${proposedReply_en}</textarea>
                 </div>
             `;
         } else {
@@ -364,6 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
             proposedReply = `${opening}\n\n${stance}\n\nYour comments have been noted and will be passed along to Councilmember Cunningham. We appreciate you taking the time to engage with our office.\n\nSincerely,\nWard 2 Staff`;
             proposedReplyHtml = `<textarea id="reply-textarea" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200">${proposedReply}</textarea>`;
         }
+        
+        const approveButtonText = email.language === 'es' ? 'Approve & Send in Spanish' : 'Approve & Send';
         
         let originalMessageHtml = `<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-gray-700 text-sm whitespace-pre-wrap">${email.body}</div>`;
 
@@ -404,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h4 class="font-semibold text-gray-600 mb-2">Proposed Reply</h4>
                     ${proposedReplyHtml}
                 </div>
-                <div class="flex justify-end items-center space-x-3 pt-4 border-t border-gray-200">
+                <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                      <button id="flag-btn" data-email-id="${email.id}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
                         Flag for Councilmember Review
                     </button>
@@ -412,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         Edit
                     </button>
                     <button id="approve-btn" data-email-id="${email.id}" class="px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Approve & Send
+                        ${approveButtonText}
                     </button>
                 </div>
             </div>
